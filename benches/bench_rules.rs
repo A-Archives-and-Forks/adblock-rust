@@ -7,11 +7,8 @@ use adblock::blocker::{Blocker, BlockerOptions};
 mod test_utils;
 use test_utils::rules_from_lists;
 
-static DEFAULT_LISTS: Lazy<Vec<String>> = Lazy::new(|| {
-    rules_from_lists(&[
-        "data/easylist.to/easylist/easylist.txt",
-    ]).collect()
-});
+static DEFAULT_LISTS: Lazy<Vec<String>> =
+    Lazy::new(|| rules_from_lists(&["data/easylist.to/easylist/easylist.txt"]).collect());
 
 fn bench_string_hashing(filters: &Vec<String>) -> adblock::utils::Hash {
     let mut dummy: adblock::utils::Hash = 0;
@@ -81,7 +78,7 @@ fn list_parse(c: &mut Criterion) {
     group.finish();
 }
 
-fn get_blocker(rules: impl IntoIterator<Item=impl AsRef<str>>) -> Blocker {
+fn get_blocker(rules: impl IntoIterator<Item = impl AsRef<str>>) -> Blocker {
     let (network_filters, _) = adblock::lists::parse_filters(rules, false, Default::default());
 
     println!("Got {} network filters", network_filters.len());
@@ -102,7 +99,8 @@ fn blocker_new(c: &mut Criterion) {
     let rules: Vec<_> = rules_from_lists(&[
         "data/easylist.to/easylist/easylist.txt",
         "data/easylist.to/easylist/easyprivacy.txt",
-    ]).collect();
+    ])
+    .collect();
 
     group.bench_function("el+ep", move |b| b.iter(|| get_blocker(&rules)));
 
